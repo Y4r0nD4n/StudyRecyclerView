@@ -1,5 +1,6 @@
 package com.example.studyrecyclerview;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -7,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewInterface, View.OnClickListener {
 
@@ -22,6 +26,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
     ArrayList <Cell> cells = new ArrayList<>();
     RecyclerView recyclerview;
     CellAdapter cellAdapter;
+
+    Button btnSetTime;
+    int hour, minutes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
             cells.add(new Cell("00:0"+i, "My Alarm"+i,false));
         }
 
-
+        btnSetTime = findViewById(R.id.btnSetTime);
+        btnSetTime.setOnClickListener(this);
 
 
         recyclerview = findViewById(R.id.RecyclerViewAlerts);
@@ -104,7 +113,24 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewInter
 
     @Override
     public void onClick(View v) {
+            if(v == btnSetTime){
 
+                TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+                        hour = selectedHour;
+                        minutes = selectedMinute;
+
+                        btnSetTime.setText(String.format(Locale.getDefault(),"%02d:%02d",hour, minutes));
+                    }
+                };
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(this,onTimeSetListener,hour,minutes,true);
+
+                timePickerDialog.setTitle("Select Time");
+                timePickerDialog.show();
+
+            }
 //        Intent intent = new Intent(MainActivity.this,SetAlarmActivity.class);
 //
 //
